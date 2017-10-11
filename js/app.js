@@ -1,8 +1,6 @@
 // JavaScript Document
 
-
 /* ======= Model ======= */
-
 
 var Restaurant = function(data) {
     "use strict";

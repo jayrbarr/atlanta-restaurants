@@ -2,35 +2,35 @@
 /* CSS Document */
 
 html, body {
-	font-family: Arial, sans-serif;
-	height: 100%;
-	margin: 0;
-	padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 .container {
-	height: 100%;
-	position: relative;
+    height: 100%;
+    position: relative;
     color: white;
 }
 h1 {
-	font-size: 22px;
-	text-align: center;
+    font-size: 22px;
+    text-align: center;
     margin: 0;
     padding: 30px 0;
 }
 #map {
-	bottom: 0px;
-	height: 100%;
-	left: 340px;
-	position: absolute;
-	right: 0px;
+    bottom: 0px;
+    height: 100%;
+    left: 340px;
+    position: absolute;
+    right: 0px;
 }
 .options-box {
-	background: black;
-	height: 100%;
-	line-height: 35px;
-	text-align: left;
-	width: 340px;
+    background: black;
+    height: 100%;
+    line-height: 35px;
+    text-align: left;
+    width: 340px;
 }
 #restaurant-list {
     padding: 0;
