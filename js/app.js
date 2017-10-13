@@ -1,52 +1,16 @@
 // JavaScript Document
+/* jshint esversion:6 */
 
 /* ======= Model ======= */
 
 var Restaurant = function(data) {
     "use strict";
-    this.title = ko.observable(data.title);
-    this.location = ko.observable(data.location);
+    this.name = ko.observable(data.name);
+    this.location = ko.observable({
+        lat: data.location.lat,
+        lng: data.location.lng    
+    });
 };
-
-var restaurantsArray = [
-    {
-        title: 'Park Ave Penthouse',
-        location: {
-            lat: 40.7713024,
-            lng: -73.9632393
-        }
-    }, {
-        title: 'Chelsea Loft',
-        location: {
-            lat: 40.7444883,
-            lng: -73.9949465
-        }
-    }, {
-        title: 'Union Square Open Floor Plan',
-        location: {
-            lat: 40.7347062,
-            lng: -73.9895759
-        }
-    }, {
-        title: 'East Village Hip Studio',
-        location: {
-            lat: 40.7281777,
-            lng: -73.984377
-        }
-    }, {
-        title: 'TriBeCa Artsy Bachelor Pad',
-        location: {
-            lat: 40.7195264,
-            lng: -74.0089934
-        }
-    }, {
-        title: 'Chinatown Homey Space',
-        location: {
-            lat: 40.7180628,
-            lng: -73.9961237
-        }
-    }];
-
 
 /* ======= ViewModel ======= */
 
@@ -58,12 +22,15 @@ var ViewModel = function() {
     
     self.restaurantList = ko.observableArray([]);
     
-    restaurantsArray.forEach(function(restItem){
-        self.restaurantList.push( new Restaurant(restItem) );
-    });
+    const RESTURL = "https://api.foursquare.com/v2/venues/search?ll=33.7582458, -84.3885123&intent=browse&radius=24140&venuePhotos=1&client_id=PP3RWERUTIA1OI3DNHTIKX4T2WSJ0L1UEXUXPEZ1Z2BFY2RM&client_secret=FNI4MCR2USHA21HA4V0RHS3SFHZ4GXSHLMZACQESYYUKAODT&v=20170801&categoryId=4bf58dd8d48988d14e941735";
     
+    $.getJSON(RESTURL, function(data) {
+        $.each( data.response.venues, function (i,venue) {
+           self.restaurantList.push( new Restaurant(venue)); 
+        });
+    } );
+              
     self.currentRestaurant = ko.observable( self.restaurantList()[0] );
-    
 };
 
 var mapView = {
