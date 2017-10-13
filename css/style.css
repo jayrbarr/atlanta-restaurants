@@ -12,12 +12,7 @@ html, body {
     position: relative;
     color: white;
 }
-h1 {
-    font-size: 22px;
-    text-align: center;
-    margin: 0;
-    padding-bottom: 30px;
-}
+
 #map {
     bottom: 0px;
     height: 100%;
@@ -34,7 +29,18 @@ h1 {
 }
 #options-box {
     height: 15%;
-    padding: 30px;
+    padding: 0;
+    margin: 0;
+}
+h1 {
+    font-size: 22px;
+    text-align: center;
+    margin: 0;
+    padding: 15px 30px;
+}
+#cuisine-text {
+    margin: 0;
+    padding: 15px 30px;
 }
 #list-box {
     -webkit-overflow-scrolling: touch;
@@ -51,6 +57,7 @@ h1 {
     line-height: 60px;
     border-bottom: 1px solid gray;
     padding-left: 30px;
+    overflow: hidden;
 }
 #restaurant-list li:first-child {
     border-top: 1px solid gray;
