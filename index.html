@@ -13,12 +13,12 @@
             <h1>Atlanta Restaurants</h1>
             <span id="cuisine-text">Cuisine:</span>
             <select data-bind="options: cuisines,
-                               optionsText: 'name',
-                               value: selectedCuisine">
+                               optionsText: $data,
+                               value: selectedCuisine" >
             </select>
         </div>
         <div id="list-box">
-            <ul id="restaurant-list" data-bind="foreach: restaurantList">
+            <ul id="restaurant-list" data-bind="foreach: filteredRestaurants">
                 <li data-bind="text: name"></li>
             </ul>
         </div>
@@ -30,7 +30,7 @@
 <script src="js/app.js"></script> 
 <script async defer
         src=
-        "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBqRIETlpoNuL4WF_-Ko5TEHZz4DbIUE70&v=3&callback=mapView.initMap">
+        "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyBqRIETlpoNuL4WF_-Ko5TEHZz4DbIUE70&v=3&callback=vm.initMap">
     </script>
 </body>
 </html>
