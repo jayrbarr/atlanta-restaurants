@@ -20,7 +20,6 @@ var ViewModel = function () {
 
     "use strict";
     var self = this;
-    var map;
     var markers = [];
 
     self.restaurantList = ko.observableArray([
@@ -73,142 +72,181 @@ var ViewModel = function () {
         }
     });
 
-    self.initMap = function () {
-            "use strict";
-            var styles = [{
-                featureType: 'water',
-                stylers: [{
-                    color: '#19a0d8'
-                }]
-            }, {
-                featureType: 'administrative',
-                elementType: 'labels.text.stroke',
-                stylers: [{
-                    color: '#ffffff'
-                }, {
-                    weight: 6
-                }]
-            }, {
-                featureType: 'administrative',
-                elementType: 'labels.text.fill',
-                stylers: [{
-                    color: '#e85113'
-                }]
-            }, {
-                featureType: 'road.highway',
-                elementType: 'geometry.stroke',
-                stylers: [{
-                    color: '#efe9e4'
-                }, {
-                    lightness: -40
-                }]
-            }, {
-                featureType: 'transit.station',
-                stylers: [{
-                    weight: 9
-                }, {
-                    hue: '#e85113'
-                }]
-            }, {
-                featureType: 'road.highway',
-                elementType: 'labels.icon',
-                stylers: [{
-                    visibility: 'off'
-                }]
-            }, {
-                featureType: 'water',
-                elementType: 'labels.text.stroke',
-                stylers: [{
-                    lightness: 100
-                }]
-            }, {
-                featureType: 'water',
-                elementType: 'labels.text.fill',
-                stylers: [{
-                    lightness: -100
-                }]
-            }, {
-                featureType: 'poi',
-                elementType: 'geometry',
-                stylers: [{
-                    visibility: 'on'
-                }, {
-                    color: '#f0e4d3'
-                }]
-            }, {
-                featureType: 'road.highway',
-                elementType: 'geometry.fill',
-                stylers: [{
-                    color: '#efe9e4'
-                }, {
-                    lightness: -25
-                }]
-            }];
-
-            // Constructor creates a new map - only center and zoom are required.
-            self.map = new google.maps.Map(document.getElementById('map'), {
-                center: {
-                    lat: 33.7582458,
-                    lng: -84.3885123
-                },
-                zoom: 15,
-                styles: styles,
-                mapTypeControl: false
-            });
-            var defaultIcon = self.makeMarkerIcon('0091ff');
-            var len = vm.restaurantList().length;
-            console.log("There are " + vm.restaurantList().length + " restaurants in the list.");
-            if (len > 0) {
-                var bounds = new google.maps.LatLngBounds();
-                for (var i = 0; i < len; i++) {
-                    var position = vm.restaurantList()[i].location;
-                    var title = vm.restaurantList()[i].title;
-                    var marker = new google.maps.Marker({
-                        position: position,
-                        title: title,
-                        animation: google.maps.Animation.DROP,
-                        icon: defaultIcon,
-                        id: i
-                    });
-                    marker.setMap(this.map);
-                    markers.push(marker);
-                    bounds.extend(marker.position);
-                }
-                this.map.fitBounds(bounds);
-                console.log("There are " + markers.length + " markers in the list.");
-            }
-        },
-        // This function takes in a COLOR, and then creates a new marker
-        // icon of that color. The icon will be 21 px wide by 34 high, have an origin
-        // of 0, 0 and be anchored at 10, 34).
-        self.makeMarkerIcon = function (markerColor) {
-            "use strict";
-            var markerImage = new google.maps.MarkerImage(
-                'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
-                '|40|_|%E2%80%A2',
-                new google.maps.Size(21, 34),
-                new google.maps.Point(0, 0),
-                new google.maps.Point(10, 34),
-                new google.maps.Size(21, 34));
-            return markerImage;
-        },
-
-
-        self.displayMarkers = function (start, stop) {
-            "use strict";
-            if (markers.length === 0) {
-                return true;
-            }
-            for (var i = 0; i < start; i++) {
-                markers[i].setMap(null);
-            }
-            for (i = start; i <= stop; i++) {
-                markers[i].setMap(this.map);
-            }
-            for (i = stop + 1; i < 17; i++) {
-                markers[i].setMap(null);
-            }
+    self.displayMarkers = function (start, stop) {
+        if (markers.length === 0) {
+            return true;
         }
+        for (var i = 0; i < start; i++) {
+            markers[i].setMap(null);
+        }
+        for (i = start; i <= stop; i++) {
+            markers[i].setMap(this.map);
+        }
+        for (i = stop + 1; i < 17; i++) {
+            markers[i].setMap(null);
+        }
+    };
+
+    /* ======= View: Map ======= */
+
+    self.initMap = function () {
+        var styles = [{
+            featureType: 'water',
+            stylers: [{
+                color: '#19a0d8'
+            }]
+        }, {
+            featureType: 'administrative',
+            elementType: 'labels.text.stroke',
+            stylers: [{
+                color: '#ffffff'
+            }, {
+                weight: 6
+            }]
+        }, {
+            featureType: 'administrative',
+            elementType: 'labels.text.fill',
+            stylers: [{
+                color: '#e85113'
+            }]
+        }, {
+            featureType: 'road.highway',
+            elementType: 'geometry.stroke',
+            stylers: [{
+                color: '#efe9e4'
+            }, {
+                lightness: -40
+            }]
+        }, {
+            featureType: 'transit.station',
+            stylers: [{
+                weight: 9
+            }, {
+                hue: '#e85113'
+            }]
+        }, {
+            featureType: 'road.highway',
+            elementType: 'labels.icon',
+            stylers: [{
+                visibility: 'off'
+            }]
+        }, {
+            featureType: 'water',
+            elementType: 'labels.text.stroke',
+            stylers: [{
+                lightness: 100
+            }]
+        }, {
+            featureType: 'water',
+            elementType: 'labels.text.fill',
+            stylers: [{
+                lightness: -100
+            }]
+        }, {
+            featureType: 'poi',
+            elementType: 'geometry',
+            stylers: [{
+                visibility: 'on'
+            }, {
+                color: '#f0e4d3'
+            }]
+        }, {
+            featureType: 'road.highway',
+            elementType: 'geometry.fill',
+            stylers: [{
+                color: '#efe9e4'
+            }, {
+                lightness: -25
+            }]
+        }];
+
+        // Constructor creates a new map - only center and zoom are required.
+        self.map = new google.maps.Map(document.getElementById('map'), {
+            center: {
+                lat: 33.7582458,
+                lng: -84.3885123
+            },
+            zoom: 15,
+            styles: styles,
+            mapTypeControl: false
+        });
+        self.largeInfowindow = new google.maps.InfoWindow();
+        var defaultIcon = self.makeMarkerIcon('0091ff');
+        var len = self.restaurantList().length;
+        if (len > 0) {
+            var bounds = new google.maps.LatLngBounds();
+            for (var i = 0; i < len; i++) {
+                var position = self.restaurantList()[i].location;
+                var title = self.restaurantList()[i].name;
+                var marker = new google.maps.Marker({
+                    position: position,
+                    title: title,
+                    animation: google.maps.Animation.DROP,
+                    icon: defaultIcon,
+                    id: i
+                });
+                marker.setMap(this.map);
+                markers.push(marker);
+                marker.addListener('click', function () {
+                    self.populateInfoWindow(this, self.largeInfowindow);
+                });
+                bounds.extend(marker.position);
+            }
+            this.map.fitBounds(bounds);
+        }
+    };
+
+    // This function takes in a COLOR, and then creates a new marker
+    // icon of that color. The icon will be 21 px wide by 34 high, have an origin
+    // of 0, 0 and be anchored at 10, 34).
+    self.makeMarkerIcon = function (markerColor) {
+        var markerImage = new google.maps.MarkerImage(
+            'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
+            '|40|_|%E2%80%A2',
+            new google.maps.Size(21, 34),
+            new google.maps.Point(0, 0),
+            new google.maps.Point(10, 34),
+            new google.maps.Size(21, 34));
+        return markerImage;
+    };
+    
+    // This function populates the infowindow when the marker is clicked. We'll only allow
+    // one infowindow which will open at the marker that is clicked, and populate based
+    // on that markers position.
+    self.populateInfoWindow = function (marker, infowindow) {
+        // Check to make sure the infowindow is not already opened on this marker.
+        if (infowindow.marker !== marker) {
+            // Clear the infowindow content to give the streetview time to load.
+            infowindow.setContent('');
+            infowindow.marker = marker;
+            // Make sure the marker property is cleared if the infowindow is closed.
+            infowindow.addListener('closeclick', function () {
+                infowindow.marker = null;
+            });
+            var restaurantID = self.restaurantList()[marker.id].id;
+            var foursquarePrefix = "https://api.foursquare.com/v2/venues/";
+            var foursquareSuffix = "/photos";
+            $.getJSON(foursquarePrefix+restaurantID+foursquareSuffix,{
+                limit: 1,
+                v: "20170801",
+                client_id:"PP3RWERUTIA1OI3DNHTIKX4T2WSJ0L1UEXUXPEZ1Z2BFY2RM",
+                client_secret:"FNI4MCR2USHA21HA4V0RHS3SFHZ4GXSHLMZACQESYYUKAODT"
+            }, function(data){
+                if (data.response.photos.count === 0) {
+                    infowindow.setContent('<div>' + marker.title + '</div>' +
+                        '<div>No Image Found</div>');
+                } else {
+                    var imagePrefix = data.response.photos.items[0].prefix;
+                    var imageSuffix = data.response.photos.items[0].suffix;
+                    var size = "300x300";
+                    var credit = data.response.photos.items[0].source.name;
+                    var creditUrl = data.response.photos.items[0].source.url;
+                    infowindow.setContent('<div class="infoWindow"><p>'+marker.title+'</p><div><img src="'+imagePrefix+size+imageSuffix+'" alt="'+marker.title+' picture" ></div><p>Image credit: <a href="'+creditUrl+'">'+credit+'</a></p></div>');
+                }
+            });
+            infowindow.open(self.map,marker);
+        }
+    };
 };
 
 // make it go!

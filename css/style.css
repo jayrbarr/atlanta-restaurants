@@ -62,3 +62,10 @@ h1 {
 #restaurant-list li:first-child {
     border-top: 1px solid gray;
 }
+.infoWindow p {
+    color: black;
+}
+.infoWindow p:first-child {
+    font-size: 2em;
+    font-weight: bold;
+}
