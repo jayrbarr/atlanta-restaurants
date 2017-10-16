@@ -1,7 +1,17 @@
 // JavaScript Document
-/* jshint esversion:6 */
 
-/* ======= Data ======= */
+/* ======= Restaurant Data =======
+* These hard-coded restaurants were pulled from the Foursquare API
+* They could also be introduced through a live API get but for
+* purposes of this assignment, they were input directly.
+* The id param is the Foursquare id for the restaurant venue
+* which is crucial to the live get for the photo infowindow later.
+* The subscribe for
+* selectedCuisine must be modified as cuisines and restaurants
+* are added to the hard-coded data.
+* Restaurants should be sorted by cuisine type to make range-bound
+* selection and display of markers simpler and code-compliant.
+*/
 
 var initialRestaurants = [{
 	id: "43e1f592f964a520cc2e1fe3",
@@ -107,9 +117,28 @@ id: "546d31ad498e774b5c87fc8b",
 	category: "German"
 }];
 
+/* ======= Cuisines Data ======
+* Hard-coded data for cuisines selection in drop-down
+* selector. Additional cuisines can be easily added to
+* drop-down and then also included in category of 
+* initialRestaurants (Restaurant) data.
+* "All" must remain in 0 position for filteredRestaurants function
+* in ViewModel to work correctly. The subscribe for
+* selectedCuisine must be modified as cuisines and restaurants
+* are added to the hard-coded data.
+*/
 
-/* ======= Model ======= */
+var initialCuisines = ["All", "American", "Chinese", "French", "German"];
 
+/* ======= Restaurant Model =======
+* Creates Restaurant object with Knockoutjs observables
+* Location is saved as lat,lng object to help facilitate
+* creation of map markers through Google Maps API later.
+* Category must match one of the Cuisines in order for 
+* drop-down sort to work. Selected controls the data-bind
+* for the css selector that highlights the last clicked
+* restaurant in the listview.
+*/
 var Restaurant = function (data) {
 	"use strict";
 	this.id = ko.observable(data.id);
@@ -127,23 +156,40 @@ var Restaurant = function (data) {
 var ViewModel = function () {
 
 	"use strict";
+    
+    // preserve the ViewModel binding context as a variable
 	var self = this;
+    
+    // global array to hold map markers for ViewModel and Maps API
 	var markers = [];
 
+    // create empty KnockoutJS ObservableArray to hold Restaurants
 	this.restaurantList = ko.observableArray([]);
 	
+    // iterate over initialRestaurants data to load Restaurants into array
 	initialRestaurants.forEach(function(restaurant){
 		self.restaurantList.push(new Restaurant(restaurant));
 	});
 
+    // set most recently-clicked Restaurant - initialize as 0
+    // in array, currently "The Varsity"
 	this.currentRestaurant = ko.observable(self.restaurantList()[0]);
+    
+    // create empty KnockoutJS ObservableArray to hold Cuisines
+    this.cuisines = ko.observableArray([]);
+    
+    // iterate over initialCuisines data to load Cuisines into array
+	initialCuisines.forEach(function(cuisine){
+		self.cuisines.push(cuisine);
+	});
 
-	this.cuisines = ["All", "American", "Chinese", "French", "German"];
+    // set currently selected cuisine - initialize as 0 or "All"
+	this.selectedCuisine = ko.observable(self.cuisines()[0]);
 
-	this.selectedCuisine = ko.observable(self.cuisines[0]);
-
+    // KnockoutJS computed function - data-binds to drop-down
+    // select in HTML view. Filters restaurantList accordingly.
 	this.filteredRestaurants = ko.computed(function () {
-		if (self.selectedCuisine() === self.cuisines[0]) {
+		if (self.selectedCuisine() === self.cuisines()[0]) {
 			return self.restaurantList();
 		} else {
 			return ko.utils.arrayFilter(self.restaurantList(), function (rest) {
@@ -152,20 +198,27 @@ var ViewModel = function () {
 		}
 	});
 
+    // Sets KnockoutJS subscribe on selectedCuisine to 
+    // display the associated map markers for selected cuisine.
 	this.selectedCuisine.subscribe(function (newCuisine) {
-		if (newCuisine === self.cuisines[0]) {
+		if (newCuisine === self.cuisines()[0]) {
 			self.displayMarkers(0, 16);
-		} else if (newCuisine === self.cuisines[1]) {
+		} else if (newCuisine === self.cuisines()[1]) {
 			self.displayMarkers(0, 4);
-		} else if (newCuisine === self.cuisines[2]) {
+		} else if (newCuisine === self.cuisines()[2]) {
 			self.displayMarkers(5, 9);
-		} else if (newCuisine === self.cuisines[3]) {
+		} else if (newCuisine === self.cuisines()[3]) {
 			self.displayMarkers(10, 13);
-		} else if (newCuisine === self.cuisines[4]) {
+		} else if (newCuisine === self.cuisines()[4]) {
 			self.displayMarkers(14, 16);
 		}
 	});
 
+    // First, clears any previously set highlight on restaurantList
+    // by setting selected to false on all Restaurants. Then,
+    // sets selected to true on data-bind click Restaurant.
+    // Also calls populateInfoWindow to highlight map marker and
+    // open infoWindow for clicked Restaurant.
 	this.highlightRestaurant = function (restaurant) {
 		for (var i=0; i<self.restaurantList().length; i++) {
 			self.restaurantList()[i].selected(false);
@@ -176,9 +229,16 @@ var ViewModel = function () {
 		self.populateInfoWindow(markers[index],self.largeInfowindow);
 	};
 
-	/* ======= View: Map ======= */
+	/* =======  Map =======
+    * Functions for Google Maps API to control Google Map and
+    * map markers for app.
+    */
 
+    // Callback function for Google Maps API initialization
 	this.initMap = function () {
+        // Styles array to control map appearance.
+        // Used below in initial maps call.
+        // Adapted from course code, New York Listings
 		var styles = [{
 			featureType: 'water',
 			stylers: [{
@@ -252,19 +312,27 @@ var ViewModel = function () {
 		// Constructor creates a new map - only center and zoom are required.
 		self.map = new google.maps.Map(document.getElementById('map'), {
 			center: {
-				lat: 33.7582458,
+				lat: 33.7582458,  // downtown Atlanta
 				lng: -84.3885123
 			},
 			zoom: 15,
-			styles: styles,
-			mapTypeControl: false
+			styles: styles,  // from array above
+			mapTypeControl: false // turn off terrain, satellite controls
 		});
+        
+        // Create elements for marker creation and highlighting
 		self.largeInfowindow = new google.maps.InfoWindow();
 		self.defaultIcon = self.makeMarkerIcon('0091ff');
 		self.highlightedIcon = self.makeMarkerIcon('FFFF24');
+        
+        // restaurantList length determines number of markers needed
 		var len = self.restaurantList().length;
+        
+        // make sure we have restaurants
 		if (len > 0) {
+            // if so, define marker bounds
 			var bounds = new google.maps.LatLngBounds();
+            // create a marker for each Restaurant from restaurantList
 			for (var i = 0; i < len; i++) {
 				var position = self.restaurantList()[i].location();
 				var title = self.restaurantList()[i].name();
@@ -275,13 +343,17 @@ var ViewModel = function () {
 					icon: self.defaultIcon,
 					id: i
 				});
-				marker.setMap(this.map);
-				markers.push(marker);
+				marker.setMap(this.map); // put marker on map
+				markers.push(marker);  // add marker to global markers array
+                
+                // set click listener in closure to capture each marker id
 				(function(markerCopy){
 					markerCopy.addListener('click', function () {
 						self.highlightRestaurant(self.restaurantList()[markerCopy.id]);
 					});
 				})(marker);
+                
+                // if necessary, extend bounds to fit markers created
 				bounds.extend(marker.position);
 			}
 			this.map.fitBounds(bounds);
@@ -291,6 +363,7 @@ var ViewModel = function () {
 	// This function takes in a COLOR, and then creates a new marker
 	// icon of that color. The icon will be 21 px wide by 34 high, have an origin
 	// of 0, 0 and be anchored at 10, 34).
+    // Adapted from course code, New York Listings
 	this.makeMarkerIcon = function (markerColor) {
 		var markerImage = new google.maps.MarkerImage(
 			'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
@@ -302,6 +375,11 @@ var ViewModel = function () {
 		return markerImage;
 	};
 
+    // Displays markers in a range from start to stop. Markers array index
+    // matches restaurantList array index. So each marker corresponds to
+    // Restaurant from restaurantList. Range should capture Restaurants
+    // matching a cuisine type. Therefore, all Restaurants need to be sorted
+    // by cuisine in restaurantList to have simple range for cuisine type.
 	this.displayMarkers = function (start, stop) {
 		if (markers.length === 0) {
 			return true;
@@ -317,6 +395,7 @@ var ViewModel = function () {
 		}
 	};
 
+    // Clears all animation and highlighting from all markers.
 	this.clearMarkers = function () {
 		var len = self.restaurantList().length;
 		for (var i = 0; i < len; i++) {
@@ -334,7 +413,7 @@ var ViewModel = function () {
 			self.clearMarkers();
 			marker.setIcon(self.highlightedIcon);
 			marker.setAnimation(google.maps.Animation.BOUNCE);
-			// Clear the infowindow content to give the streetview time to load.
+			// Clear the infowindow content. Gives JSON get time to load.
 			infowindow.setContent('');
 			infowindow.marker = marker;
 			// Make sure the marker property is cleared if the infowindow is closed.
@@ -344,19 +423,26 @@ var ViewModel = function () {
 				marker.setAnimation(null);
 				self.currentRestaurant().selected(false);
 			});
+            
+            // prepare elements for JSON get from Foursquare API to fetch photo
 			var restaurantID = self.restaurantList()[marker.id].id();
 			var foursquarePrefix = "https://api.foursquare.com/v2/venues/";
 			var foursquareSuffix = "/photos";
+            
+            // get JSON info from Foursquare for venue photo.
 			$.getJSON(foursquarePrefix + restaurantID + foursquareSuffix, {
-				limit: 1,
+				limit: 1, // only one photo required
 				v: "20170801",
 				client_id: "PP3RWERUTIA1OI3DNHTIKX4T2WSJ0L1UEXUXPEZ1Z2BFY2RM",
 				client_secret: "FNI4MCR2USHA21HA4V0RHS3SFHZ4GXSHLMZACQESYYUKAODT"
 			}, function (data) {
+                // even if successful get, make sure Foursquare API retrieved a photo
 				if (data.response.photos.count === 0) {
+                    // if not, display error message in infoWindow
 					infowindow.setContent('<div>' + marker.title + '</div>' +
 						'<div>No Image Found</div>');
 				} else {
+                    // if so, set elements for photo in html src
 					var imagePrefix = data.response.photos.items[0].prefix;
 					var imageSuffix = data.response.photos.items[0].suffix;
 					var size = "300x300";
@@ -365,7 +451,7 @@ var ViewModel = function () {
 					infowindow.setContent('<div class="infoWindow"><p>' + marker.title + '</p><div><img src="' + imagePrefix + size + imageSuffix + '" alt="' + marker.title + ' picture" ></div><p>Image credit: <a href="' + creditUrl + '">' + credit + '</a></p></div>');
 				}
 			});
-			infowindow.open(self.map, marker);
+			infowindow.open(self.map, marker); // open infoWindow on associated marker
 		}
 	};
 };

@@ -28,7 +28,7 @@ html, body {
     width: 340px;
 }
 #options-box {
-    height: 15%;
+    height: 20%;
     padding: 0;
     margin: 0;
 }
@@ -44,7 +44,7 @@ h1 {
 }
 #list-box {
     -webkit-overflow-scrolling: touch;
-    max-height: 85%;
+    max-height: 80%;
     overflow: auto;
 }
 #restaurant-list {
