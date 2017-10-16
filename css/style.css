@@ -69,3 +69,6 @@ h1 {
     font-size: 2em;
     font-weight: bold;
 }
+.selected {
+	background-color: crimson;
+}

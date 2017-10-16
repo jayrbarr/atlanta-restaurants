@@ -1,17 +1,125 @@
 // JavaScript Document
 /* jshint esversion:6 */
 
+/* ======= Data ======= */
+
+var initialRestaurants = [{
+	id: "43e1f592f964a520cc2e1fe3",
+	name: "The Varsity",
+	lat: 33.771648596496604,
+	lng: -84.38931849661414,
+	category: "American"
+}, {
+	id: "53a5f442498e192ea70e51bf",
+	name: "Ladybird Grove & Mess Hall",
+	lat: 33.75968473532744,
+	lng: -84.36417242003067,
+	category: "American"
+}, {
+id: "4a47cde3f964a52023aa1fe3",
+	name: "Mary Mac's Tea Room",
+	lat: 33.772755145900604,
+	lng: -84.37990628388033,
+	category: "American"
+}, {
+id: "4387a580f964a520062b1fe3",
+	name: "The Vortex Bar & Grill",
+	lat: 33.779067072239236,
+	lng: -84.38439846038818,
+	category: "American"
+}, {
+	id: "40e5f700f964a520100a1fe3",
+	name: "Joe's on Juniper",
+	lat: 33.783213691244676,
+	lng: -84.38229560852051,
+	category: "American"
+}, {
+	id: "4a54d8b7f964a5205bb31fe3",
+	name: "Tin Drum Asian Kitchen",
+	lat: 33.825598,
+	lng: -84.364861,
+	category: "Chinese"
+}, {
+id: "4aa2f4e0f964a520bf4220e3",
+	name: "Hsu's Chinese Food",
+	lat: 33.75956512767296,
+	lng: -84.38608767603405,
+	category: "Chinese"
+}, {
+	id: "4a38371ef964a520cf9e1fe3",
+	name: "Fortune Cookie",
+	lat: 33.82655117374547,
+	lng: -84.3328543209997,
+	category: "Chinese"
+}, {
+	id: "4a9b2018f964a520803420e3",
+	name: "Little Bangkok",
+	lat: 33.81585054624896,
+	lng: -84.3525194643487,
+	category: "Chinese"
+}, {
+	id: "4a5a37d9f964a520ecb91fe3",
+	name: "Chin Chin",
+	lat: 33.80255946152492,
+	lng: -84.4131821776038,
+	category: "Chinese"
+}, {
+	id: "4af21075f964a52098e521e3",
+	name: "Bistro Niko",
+	lat: 33.84654832641648,
+	lng: -84.36867751315688,
+	category: "French"
+}, {
+id: "546d31ad498e774b5c87fc8b",
+	name: "Le Bilboquet",
+	lat: 33.83786774371116,
+	lng: -84.38049495279441,
+	category: "French"
+}, {
+	id: "428a8580f964a52088231fe3",
+	name: "Carroll Street Cafe",
+	lat: 33.74894384196275,
+	lng: -84.36804663948855,
+	category: "French"
+}, {
+	id: "4ba04120f964a520686437e3",
+	name: "The Sound Table",
+	lat: 33.754204706274386,
+	lng: -84.3718118100296,
+	category: "French"
+}, {
+	id: "4c8ec3b5d68c6dcbd617ffa1",
+	name: "Der Biergarten",
+	lat: 33.761880986766215,
+	lng: -84.3966481089592,
+	category: "German"
+}, {
+	id: "50ee4908e4b0793e2a2814ac",
+	name: "Crumley Burgers And Brewskis",
+	lat: 33.739655926716495,
+	lng: -84.38401304158316,
+	category: "German"
+}, {
+	id: "50e4e4cae4b0c88a511f0f0e",
+	name: "Summerhill Schnitzelhaus",
+	lat: 33.73968769076406,
+	lng: -84.38404878612383,
+	category: "German"
+}];
+
+
 /* ======= Model ======= */
 
-var Restaurant = function (id, name, lat, lng, category) {
+var Restaurant = function (data) {
 	"use strict";
-	this.id = id;
-	this.name = name;
-	this.location = {
-		lat: lat,
-		lng: lng
-	};
-	this.category = category;
+	this.id = ko.observable(data.id);
+	this.name = ko.observable(data.name);
+	this.location = ko.observable({
+		lat: data.lat,
+		lng: data.lng
+	});
+	this.category = ko.observable(data.category);
+	this.selected = ko.observable(false);
 };
 
 /* ======= ViewModel ======= */
@@ -22,43 +130,29 @@ var ViewModel = function () {
 	var self = this;
 	var markers = [];
 
-	self.restaurantList = ko.observableArray([
-		new Restaurant("43e1f592f964a520cc2e1fe3", "The Varsity", 33.771648596496604, -84.38931849661414, "American"),
-		new Restaurant("53a5f442498e192ea70e51bf", "Ladybird Grove & Mess Hall", 33.75968473532744, -84.36417242003067, "American"),
-		new Restaurant("4a47cde3f964a52023aa1fe3", "Mary Mac's Tea Room", 33.772755145900604, -84.37990628388033, "American"),
-		new Restaurant("4387a580f964a520062b1fe3", "The Vortex Bar & Grill", 33.779067072239236, -84.38439846038818, "American"),
-		new Restaurant("40e5f700f964a520100a1fe3", "Joe's on Juniper", 33.783213691244676, -84.38229560852051, "American"),
-		new Restaurant("4a54d8b7f964a5205bb31fe3", "Tin Drum Asian Kitchen", 33.825598, -84.364861, "Chinese"),
-		new Restaurant("4aa2f4e0f964a520bf4220e3", "Hsu's Chinese Food", 33.75956512767296, -84.38608767603405, "Chinese"),
-		new Restaurant("4a38371ef964a520cf9e1fe3", "Fortune Cookie", 33.82655117374547, -84.3328543209997, "Chinese"),
-		new Restaurant("4a9b2018f964a520803420e3", "Little Bangkok", 33.81585054624896, -84.3525194643487, "Chinese"),
-		new Restaurant("4a5a37d9f964a520ecb91fe3", "Chin Chin", 33.80255946152492, -84.4131821776038, "Chinese"),
-		new Restaurant("4af21075f964a52098e521e3", "Bistro Niko", 33.84654832641648, -84.36867751315688, "French"),
-		new Restaurant("546d31ad498e774b5c87fc8b", "Le Bilboquet", 33.83786774371116, -84.38049495279441, "French"),
-		new Restaurant("428a8580f964a52088231fe3", "Carroll Street Cafe", 33.74894384196275, -84.36804663948855, "French"),
-		new Restaurant("4ba04120f964a520686437e3", "The Sound Table", 33.754204706274386, -84.3718118100296, "French"),
-		new Restaurant("4c8ec3b5d68c6dcbd617ffa1", "Der Biergarten", 33.761880986766215, -84.3966481089592, "German"),
-		new Restaurant("50ee4908e4b0793e2a2814ac", "Crumley Burgers And Brewskis", 33.739655926716495, -84.38401304158316, "German"),
-		new Restaurant("50e4e4cae4b0c88a511f0f0e", "Summerhill Schnitzelhaus", 33.73968769076406, -84.38404878612383, "German")
-	]);
+	this.restaurantList = ko.observableArray([]);
+	
+	initialRestaurants.forEach(function(restaurant){
+		self.restaurantList.push(new Restaurant(restaurant));
+	});
 
-	self.currentRestaurant = ko.observable(self.restaurantList()[0]);
+	this.currentRestaurant = ko.observable(self.restaurantList()[0]);
 
-	self.cuisines = ["All", "American", "Chinese", "French", "German"];
+	this.cuisines = ["All", "American", "Chinese", "French", "German"];
 
-	self.selectedCuisine = ko.observable(self.cuisines[0]);
+	this.selectedCuisine = ko.observable(self.cuisines[0]);
 
-	self.filteredRestaurants = ko.computed(function () {
+	this.filteredRestaurants = ko.computed(function () {
 		if (self.selectedCuisine() === self.cuisines[0]) {
 			return self.restaurantList();
 		} else {
 			return ko.utils.arrayFilter(self.restaurantList(), function (rest) {
-				return rest.category === self.selectedCuisine();
+				return rest.category() === self.selectedCuisine();
 			});
 		}
 	});
 
-	self.selectedCuisine.subscribe(function (newCuisine) {
+	this.selectedCuisine.subscribe(function (newCuisine) {
 		if (newCuisine === self.cuisines[0]) {
 			self.displayMarkers(0, 16);
 		} else if (newCuisine === self.cuisines[1]) {
@@ -72,24 +166,19 @@ var ViewModel = function () {
 		}
 	});
 
-	self.displayMarkers = function (start, stop) {
-		if (markers.length === 0) {
-			return true;
+	this.highlightRestaurant = function (restaurant) {
+		for (var i=0; i<self.restaurantList().length; i++) {
+			self.restaurantList()[i].selected(false);
 		}
-		for (var i = 0; i < start; i++) {
-			markers[i].setMap(null);
-		}
-		for (i = start; i <= stop; i++) {
-			markers[i].setMap(this.map);
-		}
-		for (i = stop + 1; i < 17; i++) {
-			markers[i].setMap(null);
-		}
+		self.currentRestaurant(restaurant);
+		self.currentRestaurant().selected(true);
+		var index = self.restaurantList().indexOf(self.currentRestaurant());
+		self.populateInfoWindow(markers[index],self.largeInfowindow);
 	};
 
 	/* ======= View: Map ======= */
 
-	self.initMap = function () {
+	this.initMap = function () {
 		var styles = [{
 			featureType: 'water',
 			stylers: [{
@@ -172,13 +261,13 @@ var ViewModel = function () {
 		});
 		self.largeInfowindow = new google.maps.InfoWindow();
 		self.defaultIcon = self.makeMarkerIcon('0091ff');
-		var highlightedIcon = self.makeMarkerIcon('FFFF24');
+		self.highlightedIcon = self.makeMarkerIcon('FFFF24');
 		var len = self.restaurantList().length;
 		if (len > 0) {
 			var bounds = new google.maps.LatLngBounds();
 			for (var i = 0; i < len; i++) {
-				var position = self.restaurantList()[i].location;
-				var title = self.restaurantList()[i].name;
+				var position = self.restaurantList()[i].location();
+				var title = self.restaurantList()[i].name();
 				var marker = new google.maps.Marker({
 					position: position,
 					title: title,
@@ -188,15 +277,11 @@ var ViewModel = function () {
 				});
 				marker.setMap(this.map);
 				markers.push(marker);
-				marker.addListener('click', function () {
-					for (i = 0; i < len; i++) {
-							markers[i].setAnimation(null);
-							markers[i].setIcon(self.defaultIcon);
-						}
-					self.populateInfoWindow(this, self.largeInfowindow);
-					this.setIcon(highlightedIcon);
-					this.setAnimation(google.maps.Animation.BOUNCE);
-				});
+				(function(markerCopy){
+					markerCopy.addListener('click', function () {
+						self.highlightRestaurant(self.restaurantList()[markerCopy.id]);
+					});
+				})(marker);
 				bounds.extend(marker.position);
 			}
 			this.map.fitBounds(bounds);
@@ -206,7 +291,7 @@ var ViewModel = function () {
 	// This function takes in a COLOR, and then creates a new marker
 	// icon of that color. The icon will be 21 px wide by 34 high, have an origin
 	// of 0, 0 and be anchored at 10, 34).
-	self.makeMarkerIcon = function (markerColor) {
+	this.makeMarkerIcon = function (markerColor) {
 		var markerImage = new google.maps.MarkerImage(
 			'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
 			'|40|_|%E2%80%A2',
@@ -217,12 +302,38 @@ var ViewModel = function () {
 		return markerImage;
 	};
 
+	this.displayMarkers = function (start, stop) {
+		if (markers.length === 0) {
+			return true;
+		}
+		for (var i = 0; i < start; i++) {
+			markers[i].setMap(null);
+		}
+		for (i = start; i <= stop; i++) {
+			markers[i].setMap(this.map);
+		}
+		for (i = stop + 1; i < 17; i++) {
+			markers[i].setMap(null);
+		}
+	};
+
+	this.clearMarkers = function () {
+		var len = self.restaurantList().length;
+		for (var i = 0; i < len; i++) {
+			markers[i].setAnimation(null);
+			markers[i].setIcon(self.defaultIcon);
+		}
+	}
+
 	// This function populates the infowindow when the marker is clicked. We'll only allow
 	// one infowindow which will open at the marker that is clicked, and populate based
 	// on that markers position.
-	self.populateInfoWindow = function (marker, infowindow) {
+	this.populateInfoWindow = function (marker, infowindow) {
 		// Check to make sure the infowindow is not already opened on this marker.
 		if (infowindow.marker !== marker) {
+			self.clearMarkers();
+			marker.setIcon(self.highlightedIcon);
+			marker.setAnimation(google.maps.Animation.BOUNCE);
 			// Clear the infowindow content to give the streetview time to load.
 			infowindow.setContent('');
 			infowindow.marker = marker;
@@ -231,8 +342,9 @@ var ViewModel = function () {
 				infowindow.marker = null;
 				marker.setIcon(self.defaultIcon);
 				marker.setAnimation(null);
+				self.currentRestaurant().selected(false);
 			});
-			var restaurantID = self.restaurantList()[marker.id].id;
+			var restaurantID = self.restaurantList()[marker.id].id();
 			var foursquarePrefix = "https://api.foursquare.com/v2/venues/";
 			var foursquareSuffix = "/photos";
 			$.getJSON(foursquarePrefix + restaurantID + foursquareSuffix, {

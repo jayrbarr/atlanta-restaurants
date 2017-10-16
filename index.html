@@ -19,7 +19,7 @@
         </div>
         <div id="list-box">
             <ul id="restaurant-list" data-bind="foreach: filteredRestaurants">
-                <li data-bind="text: name"></li>
+                <li data-bind="text: name, click: $parent.highlightRestaurant, css: {selected: selected}"></li>
             </ul>
         </div>
         <div id="map"></div>
