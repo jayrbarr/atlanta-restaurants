@@ -359,6 +359,13 @@ var ViewModel = function () {
 			this.map.fitBounds(bounds);
 		}
 	};
+    
+    // This callback function 
+    // helps catch authentication errors in Google Maps API
+    // Posts an alert when error received
+    function gm_authFailure() {
+       alert('Google maps failed to load!');
+    }
 
 	// This function takes in a COLOR, and then creates a new marker
 	// icon of that color. The icon will be 21 px wide by 34 high, have an origin
@@ -450,7 +457,13 @@ var ViewModel = function () {
 					var creditUrl = data.response.photos.items[0].source.url;
 					infowindow.setContent('<div class="infoWindow"><p>' + marker.title + '</p><div><img src="' + imagePrefix + size + imageSuffix + '" alt="' + marker.title + ' picture" ></div><p>Image credit: <a href="' + creditUrl + '">' + credit + '</a></p></div>');
 				}
-			});
+			})
+            .fail(function() {
+                infowindow.setContent('<div>' + marker.title + '</div>' +
+						'<div>No Image Found</div>');
+                alert("Unable to retrieve photo.");
+            })
+            ;
 			infowindow.open(self.map, marker); // open infoWindow on associated marker
 		}
 	};
