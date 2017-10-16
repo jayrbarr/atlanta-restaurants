@@ -12,7 +12,6 @@ html, body {
     position: relative;
     color: white;
 }
-
 #map {
     bottom: 0px;
     height: 100%;
@@ -70,5 +69,5 @@ h1 {
     font-weight: bold;
 }
 .selected {
-	background-color: crimson;
+    background-color: crimson;
 }

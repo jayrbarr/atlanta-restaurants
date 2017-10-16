@@ -7,21 +7,21 @@
 </head>
 
 <body>
-<div class="container">
-  <!-- left sidebar -->
-    <div id="side-box">
-         <!-- top portion of sidebar for title and drop-down cuisines -->
+<div class="container"> 
+    <!-- left sidebar -->
+    <div id="side-box"> 
+        <!-- top portion of sidebar for title and drop-down cuisines -->
         <div id="options-box">
             <h1>Atlanta Restaurants</h1>
-            <span id="cuisine-text">Cuisine:</span>
+            <span id="cuisine-text">Cuisine:</span> 
             <!-- Knockout data-bind to list of cuisines and selected cuisine -->
             <select data-bind="options: cuisines,
                                optionsText: $data,
                                value: selectedCuisine" >
             </select>
         </div>
-         <!-- bottom portion of scrollable (if necessary) sidebar for restaurants list -->
-        <div id="list-box">
+        <!-- bottom portion of scrollable (if necessary) sidebar for restaurants list -->
+        <div id="list-box"> 
             <!-- KnockoutJS data-bind to a computed function for a filtered array of restaurants -->
             <ul id="restaurant-list" data-bind="foreach: filteredRestaurants">
                 <!-- KnockoutJS data-binds to restaurant name, onClick function to highlight
@@ -35,7 +35,7 @@
 </div>
 <script src="js/lib/jquery-3.2.1.min.js"></script> 
 <script src="js/lib/knockout-3.4.2.js"></script> 
-<script src="js/app.js"></script>
+<script src="js/app.js"></script> 
 <script async defer
         src=
         "https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBqRIETlpoNuL4WF_-Ko5TEHZz4DbIUE70&v=3&callback=vm.initMap">
