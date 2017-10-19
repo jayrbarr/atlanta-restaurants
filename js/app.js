@@ -86,7 +86,7 @@ var ViewModel = function () {
         }
         self.currentRestaurant(restaurant);
         self.currentRestaurant().selected(true);
-        mapView.populateInfoWindow(self.currentRestaurant().marker);
+        mapView.populateInfoWindow(self.currentRestaurant().marker, mapView.largeInfowindow);
     };
 };
 
@@ -255,9 +255,8 @@ var mapView = {
     // This function populates the infowindow when the marker is clicked. We'll only allow
     // one infowindow which will open at the marker that is clicked, and populate based
     // on that markers position.
-    populateInfoWindow: function (marker) {
+    populateInfoWindow: function (marker, infowindow) {
         "use strict";
-        var infowindow = new google.maps.InfoWindow();
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker !== marker) {
             mapView.clearMarkers();
