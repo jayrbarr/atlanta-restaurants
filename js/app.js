@@ -38,6 +38,10 @@ var ViewModel = function () {
 
     // preserve the ViewModel binding context as a variable
     var self = this;
+    
+    // initialize state of list toggle button and list visibility
+    this.buttonState = ko.observable("Hide List");
+    this.listVisible = ko.observable(true);
 
     // create empty KnockoutJS ObservableArray to hold Restaurants
     this.restaurantList = ko.observableArray([]);
@@ -87,6 +91,16 @@ var ViewModel = function () {
         self.currentRestaurant(restaurant);
         self.currentRestaurant().selected(true);
         mapView.populateInfoWindow(self.currentRestaurant().marker, mapView.largeInfowindow);
+    };
+    
+    this.toggleView = function() {
+        if (self.listVisible()) {
+            self.listVisible(false);
+            self.buttonState("Show List");
+        } else {
+            self.listVisible(true);
+            self.buttonState("Hide List");
+        }
     };
 };
 

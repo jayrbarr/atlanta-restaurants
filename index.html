@@ -9,34 +9,35 @@
 
 <body>
 <div class="container"> 
-    <!-- left sidebar -->
-    <div id="side-box"> 
-        <!-- top portion of sidebar for title and drop-down cuisines -->
-        <div id="options-box">
-            <h1>Atlanta Restaurants</h1>
+    <!-- top portion of sidebar for title and drop-down cuisines -->
+    <div id="options-box">
+        <h1>Atlanta Restaurants</h1>
+        <div id="options-selectors">
             <span id="cuisine-text">Cuisine:</span> 
             <!-- Knockout data-bind to list of cuisines and selected cuisine -->
             <select data-bind="options: cuisines,
                                optionsText: $data,
                                value: selectedCuisine" >
             </select>
+            <button data-bind="click: toggleView, text: buttonState"></button>
         </div>
-        <!-- bottom portion of scrollable (if necessary) sidebar for restaurants list -->
-        <div id="list-box"> 
-            <!-- KnockoutJS data-bind to a computed function for a filtered array of restaurants -->
-            <ul id="restaurant-list" data-bind="foreach: filteredRestaurants">
-                <!-- KnockoutJS data-binds to restaurant name, onClick function to highlight
-                restaurant div, css to control background-color change of selected restaurant on click -->
-                <li data-bind="text: name, click: $parent.highlightRestaurant, css: {selected: selected}"></li>
-            </ul>
-        </div>
-        <!-- Google Map: div filled on callback function initMap of async API call below -->
-        <div id="map"></div>
     </div>
+    <!-- bottom portion of scrollable (if necessary) sidebar for restaurants list -->
+    <div id="list-box" data-bind="visible: listVisible"> 
+        <!-- KnockoutJS data-bind to a computed function for a filtered array of restaurants -->
+        <ul id="restaurant-list" data-bind="foreach: filteredRestaurants">
+            <!-- KnockoutJS data-binds to restaurant name, onClick function to highlight
+                restaurant div, css to control background-color change of selected restaurant on click -->
+            <li data-bind="text: name, click: $parent.highlightRestaurant, css: {selected: selected}"></li>
+        </ul>
+    </div>
+    <!-- Google Map: div filled on callback function initMap of async API call below -->
+    <div id="map"></div>
+</div>
 </div>
 <script src="js/lib/jquery-3.2.1.min.js"></script> 
-<script src="js/lib/knockout-3.4.2.js"></script>
-<script src="js/data.js"></script>
+<script src="js/lib/knockout-3.4.2.js"></script> 
+<script src="js/data.js"></script> 
 <script src="js/app.js"></script> 
 <script async defer onerror="gm_authFailure()"
         src=

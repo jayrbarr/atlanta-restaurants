@@ -3,6 +3,7 @@
 
 html, body {
     font-family: Arial, sans-serif;
+    font-size: 16px;
     height: 100%;
     margin: 0;
     padding: 0;
@@ -15,48 +16,66 @@ html, body {
 #map {
     bottom: 0px;
     height: 100%;
-    left: 340px;
+    width: 100%;
     position: absolute;
     right: 0px;
-}
-#side-box {
-    background: black;
-    height: 100%;
-    line-height: 35px;
-    text-align: left;
-    width: 340px;
+    z-index: 1;
 }
 #options-box {
     height: 20%;
     padding: 0;
     margin: 0;
+    background: black;
+    line-height: 2em;
+    text-align: left;
+    width: 20rem;
+    z-index: 2;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    font-size: .8rem;
 }
 h1 {
-    font-size: 22px;
+    font-size: 1.8rem;
     text-align: center;
-    margin: 0;
-    padding: 15px 30px;
+    margin: .5rem 0;
+    padding: 0 auto;
+}
+#options-selectors {
+    margin: 0 auto;
+    width: 15rem;
 }
 #cuisine-text {
     margin: 0;
-    padding: 15px 30px;
+    padding: 0;
 }
 #list-box {
     -webkit-overflow-scrolling: touch;
     max-height: 80%;
     overflow: auto;
+    padding: 0;
+    margin: 0;
+    background: black;
+    line-height: 35px;
+    text-align: left;
+    width: 20rem;
+    z-index: 3;
+    position: absolute;
+    left: 0px;
+    top: 20%;
 }
 #restaurant-list {
     padding: 0;
     margin: 0;
 }
 #restaurant-list li {
-    height: 60px;
+    height: 3rem;
     list-style: none;
-    line-height: 60px;
+    line-height: 3rem;
     border-bottom: 1px solid gray;
-    padding-left: 30px;
+    padding-left: 1em;
     overflow: hidden;
+    font-size: 1.25rem;
 }
 #restaurant-list li:first-child {
     border-top: 1px solid gray;
@@ -65,7 +84,7 @@ h1 {
     color: black;
 }
 .infoWindow p:first-child {
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: bold;
 }
 .selected {
