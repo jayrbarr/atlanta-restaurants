@@ -277,7 +277,7 @@ var mapView = {
             marker.setIcon(mapView.highlightedIcon);
             marker.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(function () {
-                marker.setAnimation(null)
+                marker.setAnimation(null);
             }, 2000);
             // Clear the infowindow content. Gives JSON get time to load.
             infowindow.setContent('');
