@@ -70,7 +70,7 @@ var ViewModel = function () {
         } else {
             var selectedTemp = self.selectedCuisine();
             return ko.utils.arrayFilter(self.restaurantList(), function (rest) {
-                return rest.category() === selectedTemp;
+                return rest.category === selectedTemp;
             });
         }
     });
