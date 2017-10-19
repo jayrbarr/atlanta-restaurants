@@ -204,7 +204,7 @@ var mapView = {
                     position: position,
                     title: title,
                     animation: google.maps.Animation.DROP,
-                    icon: this.defaultIcon,
+                    icon: mapView.defaultIcon,
                     id: i
                 });
                 marker.setMap(this.map); // put marker on map
@@ -248,7 +248,7 @@ var mapView = {
         "use strict";
         vm.restaurantList().forEach(function(restaurant) {
             restaurant.marker.setAnimation(null);
-            restaurant.marker.setIcon(self.defaultIcon);
+            restaurant.marker.setIcon(mapView.defaultIcon);
         });
     },
 
